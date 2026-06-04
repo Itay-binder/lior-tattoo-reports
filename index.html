@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דוח ביצועים | ליאור קעקועים | 01.05–04.06.2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f4f6f9;
+    color: #1a1a2e;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    direction: rtl;
+  }
+  .container { max-width: 980px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    border-radius: 16px;
+    padding: 30px 36px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.25);
+  }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header p  { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 5px; }
+  .header-stat { text-align: center; }
+  .header-stat .num { font-size: 26px; font-weight: 800; }
+  .header-stat .lbl { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+
+  /* KPI GRID */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+  .kpi {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 18px;
+    border-top: 4px solid transparent;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  }
+  .kpi.blue   { border-top-color: #2563eb; }
+  .kpi.orange { border-top-color: #d97706; }
+  .kpi.green  { border-top-color: #16a34a; }
+  .kpi.teal   { border-top-color: #0891b2; }
+  .kpi .val { font-size: 28px; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
+  .kpi .lbl { font-size: 12px; color: #888; }
+  .kpi .sub { font-size: 11px; color: #bbb; margin-top: 6px; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8ecf0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #2563eb;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* COMPARE GRID */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  }
+  .card h3 { font-size: 13px; color: #888; margin-bottom: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card.accent { border: 2px solid #2563eb; background: #f0f6ff; }
+  .compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-row .metric { color: #777; }
+  .compare-row .val    { color: #1a1a2e; font-weight: 700; }
+  .up   { color: #dc2626; font-size: 12px; }
+  .down { color: #16a34a; font-size: 12px; }
+  .dim  { color: #ccc; }
+
+  /* TABLE */
+  .table-wrap {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th {
+    background: #f8fafc;
+    padding: 11px 14px;
+    text-align: right;
+    color: #888;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #eee;
+  }
+  td { padding: 11px 14px; border-bottom: 1px solid #f5f5f5; color: #333; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafcff; }
+  tr.total-row td { background: #f0f6ff; font-weight: 700; border-top: 2px solid #d0e0ff; }
+  .tag { padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .tag-rishon { background: #dbeafe; color: #1d4ed8; }
+  .tag-roei   { background: #dcfce7; color: #15803d; }
+  .tag-clone  { background: #fef3c7; color: #b45309; }
+  .tag-traffic{ background: #f3f4f6; color: #6b7280; }
+  .red    { color: #dc2626; font-weight: 600; }
+  .green  { color: #16a34a; font-weight: 600; }
+  .blue   { color: #2563eb; font-weight: 600; }
+  .orange { color: #d97706; font-weight: 600; }
+
+  /* LP CARDS */
+  .lp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .lp-card { background: #fff; border-radius: 12px; padding: 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+  .lp-card.winner { border: 2px solid #16a34a; background: #f0fdf4; }
+  .lp-card.loser  { border: 2px solid #f59e0b; background: #fffbeb; }
+  .lp-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .badge { display: inline-block; border-radius: 20px; font-size: 11px; font-weight: 700; padding: 3px 10px; margin-bottom: 12px; }
+  .badge-green  { background: #dcfce7; color: #15803d; }
+  .badge-orange { background: #fef3c7; color: #92400e; }
+  .cr-num { font-size: 36px; font-weight: 800; margin: 8px 0 4px; }
+  .lp-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.06); font-size: 13.5px; }
+  .lp-row:last-child { border-bottom: none; }
+  .lp-row .lbl { color: #777; }
+  .bar-bg   { background: #e5e7eb; border-radius: 6px; height: 10px; margin: 14px 0 6px; }
+  .bar-fill { height: 10px; border-radius: 6px; }
+  .bar-green { background: linear-gradient(90deg, #16a34a, #22c55e); }
+  .bar-blue  { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+
+  /* INFO BOX */
+  .info-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #1e3a5f;
+    line-height: 1.75;
+  }
+  .info-box strong { color: #1d4ed8; }
+  .warn-box {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #78350f;
+    line-height: 1.75;
+  }
+  .warn-box strong { color: #92400e; }
+  .success-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #14532d;
+    line-height: 1.75;
+  }
+  .success-box strong { color: #15803d; }
+
+  /* Q&A */
+  .qa-list { margin-bottom: 24px; }
+  .qa-item { background: #fff; border-radius: 12px; padding: 20px 22px; margin-bottom: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+  .qa-item.note { border-right: 4px solid #2563eb; }
+  .qa-q { font-size: 14px; color: #555; font-weight: 700; margin-bottom: 10px; }
+  .qa-a { font-size: 14px; color: #333; line-height: 1.75; }
+  .qa-a strong { color: #1d4ed8; }
+  .qa-a .hl { color: #d97706; font-weight: 600; }
+  .qa-a .ok { color: #16a34a; font-weight: 600; }
+
+  /* RECS */
+  .recs { margin-bottom: 28px; }
+  .rec {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    border-right: 4px solid #e5e7eb;
+  }
+  .rec.p-high   { border-right-color: #dc2626; }
+  .rec.p-med    { border-right-color: #d97706; }
+  .rec.p-low    { border-right-color: #16a34a; }
+  .rec-num { background: #eff6ff; color: #2563eb; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+  .rec-text { font-size: 14px; color: #444; line-height: 1.65; }
+  .rec-text strong { color: #1a1a2e; }
+
+  .footer { text-align: center; color: #bbb; font-size: 12px; margin-top: 40px; }
+
+  @media (max-width: 700px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .compare-grid, .lp-grid { grid-template-columns: 1fr; }
+    .header { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>דוח ביצועים — ליאור קעקועים</h1>
+      <p>מחזור נוכחי: 01.05.2026 – 04.06.2026 &nbsp;|&nbsp; 35 יום &nbsp;|&nbsp; נתוני Meta Ads + CRM</p>
+    </div>
+    <div class="header-stat">
+      <div class="num">₪14,679</div>
+      <div class="lbl">סה"כ הוצאות</div>
+    </div>
+  </div>
+
+  <!-- KPI GRID -->
+  <div class="kpi-grid">
+    <div class="kpi blue">
+      <div class="val">128</div>
+      <div class="lbl">לידים (Meta)</div>
+      <div class="sub">לעומת 79 באפריל (+62%)</div>
+    </div>
+    <div class="kpi orange">
+      <div class="val">₪95.1</div>
+      <div class="lbl">עלות ליד (CPL)</div>
+      <div class="sub">לעומת ₪63.5 באפריל (+50%)</div>
+    </div>
+    <div class="kpi green">
+      <div class="val">12</div>
+      <div class="lbl">לקוחות סגורים (CRM)</div>
+      <div class="sub">1 נסגר עוד באפריל + 11 במחזור</div>
+    </div>
+    <div class="kpi teal">
+      <div class="val">₪1,223</div>
+      <div class="lbl">עלות ללקוח</div>
+      <div class="sub">₪14,679 / 12 לקוחות</div>
+    </div>
+  </div>
+
+  <!-- COMPARE -->
+  <div class="section-title"><span class="dot"></span> השוואה חודשית — מחזור נוכחי מול אפריל</div>
+  <div class="compare-grid">
+    <div class="card accent">
+      <h3>מאי 2026 — 01.05–04.06</h3>
+      <div class="compare-row"><span class="metric">סה"כ הוצאות</span><span class="val">₪14,679</span></div>
+      <div class="compare-row"><span class="metric">הוצאות לידים</span><span class="val">₪12,175</span></div>
+      <div class="compare-row"><span class="metric">לידים</span><span class="val">128 <span class="down">▲62%</span></span></div>
+      <div class="compare-row"><span class="metric">CPL</span><span class="val"><span class="red">₪95.1</span> <span class="up">▲50%</span></span></div>
+      <div class="compare-row"><span class="metric">לקוחות (CRM)</span><span class="val">12</span></div>
+      <div class="compare-row"><span class="metric">עלות ללקוח</span><span class="val orange">₪1,223</span></div>
+    </div>
+    <div class="card">
+      <h3>אפריל 2026 — 01.04–30.04</h3>
+      <div class="compare-row"><span class="metric">סה"כ הוצאות</span><span class="val">₪9,930</span></div>
+      <div class="compare-row"><span class="metric">הוצאות לידים</span><span class="val">₪5,016</span></div>
+      <div class="compare-row"><span class="metric">לידים</span><span class="val">79</span></div>
+      <div class="compare-row"><span class="metric">CPL</span><span class="val green">₪63.5</span></div>
+      <div class="compare-row"><span class="metric">לקוחות (CRM)</span><span class="val">13</span></div>
+      <div class="compare-row"><span class="metric">עלות ללקוח</span><span class="val green">₪764</span></div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGNS TABLE -->
+  <div class="section-title"><span class="dot"></span> פירוט קמפיינים — מחזור נוכחי</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>קמפיין</th><th>סוג</th><th>הוצאות</th><th>לידים</th><th>CPL</th><th>הופעות</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>הפניה לדף ליווי | 09/03</td>
+          <td><span class="tag tag-rishon">לידים</span></td>
+          <td class="blue">₪11,295</td><td>116</td><td class="orange">₪97.4</td><td>240,187</td>
+        </tr>
+        <tr>
+          <td>פגישה אישית | 23/10 (ישן)</td>
+          <td><span class="tag tag-roei">לידים</span></td>
+          <td>₪880</td><td>12</td><td class="green">₪73.3</td><td>16,176</td>
+        </tr>
+        <tr>
+          <td>CBO | תנועה לפרופיל | 22/03</td>
+          <td><span class="tag tag-traffic">תנועה</span></td>
+          <td>₪1,613</td><td>—</td><td>—</td><td>180,865</td>
+        </tr>
+        <tr>
+          <td>ABO | מעורבות | פרימיום</td>
+          <td><span class="tag tag-traffic">מעורבות</span></td>
+          <td>₪891</td><td>—</td><td>—</td><td>60,518</td>
+        </tr>
+        <tr class="total-row">
+          <td>סה"כ</td><td>—</td>
+          <td class="blue">₪14,679</td><td>128</td><td class="orange">₪95.1</td><td>497,746</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ADSETS TABLE -->
+  <div class="section-title"><span class="dot"></span> פירוט סדרות מודעות — מחזור נוכחי</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>סדרה</th><th>דף</th><th>הוצאות</th><th>לידים</th><th>CPL</th><th>צפיות דף</th><th>CR</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>דף ליווי ראשי - <strong>טסטים</strong> | 17/04</td>
+          <td><span class="tag tag-rishon">ראשי</span></td>
+          <td>₪4,739</td><td>47</td><td class="orange">₪100.8</td><td>1,183</td>
+          <td class="red">3.97% ⚠</td>
+        </tr>
+        <tr>
+          <td>קהל חם עוקבים וביקרו באתר | 23/10</td>
+          <td><span class="tag tag-rishon">ראשי</span></td>
+          <td>₪2,299</td><td>21</td><td class="orange">₪109.5</td><td>233</td>
+          <td class="green">9.0% ✓</td>
+        </tr>
+        <tr>
+          <td>דף רועי - קהל חם | 17/04/26</td>
+          <td><span class="tag tag-roei">רועי</span></td>
+          <td>₪1,841</td><td>26</td><td class="green">₪70.8</td><td>235</td>
+          <td class="green">11.1% ✓</td>
+        </tr>
+        <tr>
+          <td>דף רועי - קהל חם | 28/05/26</td>
+          <td><span class="tag tag-roei">רועי</span></td>
+          <td>₪1,435</td><td>15</td><td class="orange">₪95.7</td><td>138</td>
+          <td class="green">10.9% ✓</td>
+        </tr>
+        <tr>
+          <td>דף רועי משוכפל | 17/04/26</td>
+          <td><span class="tag tag-clone">משוכפל</span></td>
+          <td>₪981</td><td>7</td><td class="red">₪140.2</td><td>98</td>
+          <td class="orange">7.1%</td>
+        </tr>
+        <tr>
+          <td>קמפיין ישן פגישה אישית | 23/10</td>
+          <td><span class="tag tag-roei">ישן</span></td>
+          <td>₪880</td><td>12</td><td class="green">₪73.3</td><td>90</td>
+          <td class="green">13.3% ✓</td>
+        </tr>
+        <tr class="total-row">
+          <td>סה"כ</td><td>—</td><td>₪12,175</td><td>128</td><td class="orange">₪95.1</td><td>1,977</td><td>6.5%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- LP COMPARISON -->
+  <div class="section-title"><span class="dot"></span> השוואת דפי נחיתה</div>
+  <div class="lp-grid">
+    <div class="lp-card winner">
+      <div class="badge badge-green">הכי טוב</div>
+      <h3>דף רועי</h3>
+      <div class="cr-num green">11.1%</div>
+      <div style="color:#888;font-size:12px;margin-bottom:10px;">שיעור המרה (צפיות → לידים)</div>
+      <div class="bar-bg"><div class="bar-fill bar-green" style="width:100%"></div></div>
+      <div class="lp-row"><span class="lbl">CPL ממוצע</span><span class="green">₪70.8</span></div>
+      <div class="lp-row"><span class="lbl">צפיות בדף</span><span>235</span></div>
+      <div class="lp-row"><span class="lbl">לידים</span><span>26</span></div>
+      <div class="lp-row"><span class="lbl">הוצאות</span><span>₪1,841</span></div>
+    </div>
+    <div class="lp-card loser">
+      <div class="badge badge-orange">טסטים — נמוך יותר</div>
+      <h3>דף ראשי (סדרת טסטים)</h3>
+      <div class="cr-num orange">3.97%</div>
+      <div style="color:#888;font-size:12px;margin-bottom:10px;">שיעור המרה (צפיות → לידים)</div>
+      <div class="bar-bg"><div class="bar-fill bar-blue" style="width:36%"></div></div>
+      <div class="lp-row"><span class="lbl">CPL ממוצע</span><span class="red">₪100.8</span></div>
+      <div class="lp-row"><span class="lbl">צפיות בדף</span><span>1,183</span></div>
+      <div class="lp-row"><span class="lbl">לידים</span><span>47</span></div>
+      <div class="lp-row"><span class="lbl">הוצאות</span><span>₪4,739</span></div>
+    </div>
+  </div>
+
+  <!-- NOTE ON RISHON -->
+  <div class="info-box">
+    <strong>הבהרה חשובה על דף ראשי:</strong> שיעור ההמרה הנמוך (3.97%) מגיע מסדרת "טסטים" — שהריצה מגוון מודעות לא מוכחות במקביל. זה לא בהכרח בעיה של הדף עצמו.<br>
+    הסדרה הוותיקה שמפנה לאותו דף ראשי (23/10) הציגה <strong>9% CR</strong> עם מודעות מוכחות — ממש כמו באפריל. גם באפריל דף ראשי ממיר טוב יותר ממה שהטסטים הראו השנה.
+    <br>המסקנה: <strong>הדף עצמו בסדר</strong> — הבעיה הייתה שהשקענו ₪4,739 על מודעות בטסט שחלקן לא עבדו, ורד הממוצע הכולל.
+  </div>
+
+  <!-- NOTE ON CLONE -->
+  <div class="success-box">
+    <strong>רועי משוכפל — מה לעשות:</strong> הביצועים בפרסום ממומן (7.1% CR, ₪140/ליד) נמוכים מהמקור, אבל הדף ממיר היטב מתנועה אורגנית — בעיקר מהלינק בביו. <strong>שווה להשאיר אותו פעיל ולהפעיל מחדש</strong> לצורך ערוץ הביו, תוך מעקב אם הפרסום הממומן משתפר עם מודעות מתאימות יותר.
+  </div>
+
+  <!-- FUNNEL -->
+  <div class="section-title"><span class="dot"></span> מנהרת מכירות — מחזור נוכחי</div>
+  <div class="table-wrap" style="margin-bottom:24px;">
+    <table>
+      <thead><tr>
+        <th>שלב</th><th>מחזור נוכחי (מאי–יוני)</th><th>אפריל</th><th>הסבר</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>לידים שנכנסו</strong></td>
+          <td class="blue">128</td><td>79</td>
+          <td style="color:#888;font-size:12px;">נתוני Meta Ads</td>
+        </tr>
+        <tr>
+          <td><strong>בוצעה שיחת מכירה</strong></td>
+          <td>~39 <span style="color:#888;font-size:12px;">(~30%)</span></td>
+          <td>—</td>
+          <td style="color:#888;font-size:12px;">מתוך 98 לידים שנכנסו ל-CRM</td>
+        </tr>
+        <tr>
+          <td><strong>נרשמו / נסגרו</strong></td>
+          <td class="green">12 <span style="color:#888;font-size:12px;">(9.4% מהלידים)</span></td>
+          <td class="green">13 <span style="color:#888;font-size:12px;">(16.5%)</span></td>
+          <td style="color:#888;font-size:12px;">אפריל: שיעור סגירה גבוה יותר</td>
+        </tr>
+        <tr>
+          <td><strong>יחס שיחה → סגירה</strong></td>
+          <td class="orange">~31%</td>
+          <td>—</td>
+          <td style="color:#888;font-size:12px;">39 שיחות → 12 סגורים</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CUSTOMER ATTRIBUTION -->
+  <div class="section-title"><span class="dot"></span> ייחוס לקוחות לפי מקור — מחזור נוכחי</div>
+  <div class="table-wrap" style="margin-bottom:14px;">
+    <table>
+      <thead><tr>
+        <th>מקור / דף</th><th>לידים</th><th>שיחות יצאו</th><th>לקוחות סגורים</th><th>יחס סגירה</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-rishon">קמפיין ראשי</span></td>
+          <td>31</td><td>11</td>
+          <td class="green"><strong>5</strong></td>
+          <td class="green">16.1%</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-roei">דף רועי</span></td>
+          <td>42</td><td>18</td>
+          <td class="blue"><strong>4</strong></td>
+          <td class="blue">9.5%</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-traffic">קהל יעד / אחר</span></td>
+          <td>25</td><td>10</td>
+          <td class="orange"><strong>1</strong></td>
+          <td class="red">4.0%</td>
+        </tr>
+        <tr class="total-row">
+          <td>סה"כ (מתוך CRM)</td><td>98</td><td>39</td>
+          <td class="green"><strong>10–12</strong></td>
+          <td class="orange">10–12%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn-box" style="margin-bottom:24px;">
+    <strong>תובנת מכירות:</strong> לידים מהקמפיין הראשי (ראשי) סוגרים ב-<strong>16.1%</strong> — גבוה יותר מדף רועי (9.5%). אבל דף רועי מייצר לידים זולים יותר (₪70.8 לעומת ₪109.5). לידים מ"קהל יעד" (cold) סוגרים בסה"כ 4% — לא שווה להשקיע בהם. <br>
+    <strong>שיעור הסגירה ירד מאפריל (16.5%) למאי (10–12%)</strong> — לא בגלל המודעות, אלא ייתכן בגלל עומס על צוות המכירות שנבע מהגידול בלידים.
+  </div>
+
+  <!-- MESSAGING INSIGHTS -->
+  <div class="section-title"><span class="dot"></span> מסרים מנצחים — מה עובד</div>
+  <div class="table-wrap" style="margin-bottom:14px;">
+    <table>
+      <thead><tr>
+        <th>מודעה / מסר</th><th>לידים</th><th>% מהסה"כ</th><th>סיווג</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>מודעת פגישה ווינר</strong></td>
+          <td class="blue"><strong>45</strong></td>
+          <td class="green"><strong>40%</strong></td>
+          <td><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">ווינר ברור</span></td>
+        </tr>
+        <tr>
+          <td>10 פגישות בחינם — קופי יובל 3</td>
+          <td>12</td><td>10.7%</td>
+          <td><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">טוב</span></td>
+        </tr>
+        <tr>
+          <td>אם את רוצה להיות מקעקעת</td>
+          <td>7</td><td>6.3%</td>
+          <td><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">טוב</span></td>
+        </tr>
+        <tr>
+          <td>10 פגישות בחינם — קופי יובל 2</td>
+          <td>6</td><td>5.4%</td>
+          <td><span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">בינוני</span></td>
+        </tr>
+        <tr>
+          <td>אם היית יכולה להתפרנס מהאונות שלך</td>
+          <td>6</td><td>5.4%</td>
+          <td><span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">בינוני</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="info-box" style="margin-bottom:24px;">
+    <strong>מה עובד:</strong> ה"פגישה ווינר" מייצרת 40% מכלל הלידים — המסר של "פגישה אישית בחינם" הוא ה-hook המנצח. כל ווריאציות "10 פגישות בחינם" מצטברות ל-~21 לידים נוספים (19%).<br>
+    <strong>זווית הזהות</strong> ("אם את רוצה להיות מקעקעת") עובדת גם — אספירציה מקצועית. <strong>זווית הפרנסה</strong> ("אם היית יכולה להתפרנס מהאונות") — עובדת חלקית, לא מנצחת.<br>
+    <strong>מסקנה:</strong> להמשיך לבנות על הזווית של "פגישה אישית בחינם" + זהות מקצועית. לא לשנות מה שעובד.
+  </div>
+
+  <!-- Q&A -->
+  <div class="section-title"><span class="dot"></span> תשובות לשאלות</div>
+  <div class="qa-list">
+
+    <div class="qa-item note">
+      <div class="qa-q">כמה הוצאנו בסה"כ?</div>
+      <div class="qa-a">
+        <strong>₪14,679</strong> בסה"כ. מתוכם <strong>₪12,175</strong> על קמפיינים לידים ישירות.
+        יתרת ₪2,505 — קמפיין תנועה לפרופיל (₪1,613) ומעורבות (₪891).
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q">למה ה-CPL עלה מאפריל?</div>
+      <div class="qa-a">
+        3 סיבות ספציפיות:<br>
+        1. <strong>סקייל מהיר מדי</strong> — הכפלנו הוצאות פי 2.4 בין החודשים. פייסבוק חוזר ל-Learning ומאבד יעילות.<br>
+        2. <strong>סדרת הטסטים ב-3.97% CR</strong> — ₪4,739 על מודעות לא מוכחות הורידו את הממוצע הכולל.<br>
+        3. <strong>רועי משוכפל ב-₪140/ליד</strong> — גרר את הממוצע למעלה.
+        <br>חשוב לציין: הדף ראשי עצמו עדיין ממיר 9% כשמריצים עליו מודעות מוכחות — כמו באפריל.
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q">על דף ראשי טסטים — האם זה הדף או המודעות?</div>
+      <div class="qa-a">
+        <span class="ok">בעיקר המודעות, לא הדף.</span><br>
+        הסדרה "טסטים" הריצה גרסאות מודעות שונות — חלקן חדשות ולא מוכחות. הממוצע של 3.97% הוא על כלל הטסטים ביחד.<br>
+        לעומת זאת, הסדרה הוותיקה שמפנה לאותו דף ראשי (23/10) הציגה <strong>9% CR</strong> — מה שמוכיח שהדף עצמו ממיר טוב.<br>
+        גם באפריל: שיעור ההמרה של דף ראשי היה דומה. אין ירידה בדף — הייתה ירידה בביצועי הטסטים.
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q">איזה דף ממיר יותר — ראשי או רועי?</div>
+      <div class="qa-a">
+        <span class="ok">דף רועי מנצח.</span> 11.1% CR לעומת 9.0% של ראשי (עם מודעות מוכחות).<br>
+        ההבדל: <strong>₪70.8 לליד ברועי</strong> לעומת <strong>₪109.5 לליד בראשי</strong>.<br>
+        שתי הדפים עובדים — רועי פשוט יעיל יותר בכל מדד.
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q">מה קרה עם רועי משוכפל?</div>
+      <div class="qa-a">
+        רועי משוכפל הופעלה מחדש עם bid cap ₪70 במהלך המחזור.<br>
+        בפרסום ממומן: <span class="hl">7 לידים, ₪981, CPL ₪140.2</span> — נמוך מהמקור.<br>
+        אבל: הדף ממיר היטב מהלינק בביו. <strong>שווה להשאיר אותו פעיל</strong> לצורך הערוץ האורגני ולעקוב אם הממומן משתפר עם מודעות מתאימות יותר.
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q">כמה לקוחות נסגרו? עלות ללקוח?</div>
+      <div class="qa-a">
+        <strong>12 לקוחות</strong> — 1 נסגר עוד בתחילת המחזור (אפריל) ועוד 11 במהלך מאי–יוני.<br>
+        עלות ללקוח: <strong>₪1,223</strong> (₪14,679 / 12).<br>
+        לעומת אפריל: 13 לקוחות ב-₪764/לקוח — הפרש משמעותי, בעיקר בגלל ה-CPL הגבוה יותר ותקציב גדול יותר.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RECS -->
+  <div class="section-title"><span class="dot"></span> המלצות למחזור הבא</div>
+  <div class="recs">
+    <div class="rec p-high">
+      <div class="rec-num">1</div>
+      <div class="rec-text"><strong>לסיים את שלב הטסטים בסדרת ראשי</strong> — לזהות את המודעות המנצחות מהטסט ולהמיר אותן לסדרה קבועה עם מודעות מוכחות בלבד. כך מחזירים את ה-CR לטווח 9%.</div>
+    </div>
+    <div class="rec p-high">
+      <div class="rec-num">2</div>
+      <div class="rec-text"><strong>להגדיל תקציב על דף רועי</strong> — 11.1% CR ו-₪70.8/ליד. זה המנוע הכי יעיל. הסדרה "רועי 17/04" צריכה תקציב גדול יותר בצורה מבוקרת.</div>
+    </div>
+    <div class="rec p-med">
+      <div class="rec-num">3</div>
+      <div class="rec-text"><strong>להפעיל רועי משוכפל מחדש</strong> — בעיקר כדף לתנועה מהביו. לעקוב גם על ביצועי הפרסום הממומן. אם ה-CPL לא משתפר — להפסיק את הממומן אך להשאיר הדף פעיל לביו.</div>
+    </div>
+    <div class="rec p-med">
+      <div class="rec-num">4</div>
+      <div class="rec-text"><strong>להאט סקייל</strong> — עלייה של 143% בהוצאות חודשיות גרמה ל-CPL לקפוץ 50%. למחזור הבא: לסקייל 20-30% בשבוע ולא בבת אחת, לתת לאלגוריתם להסתגל.</div>
+    </div>
+    <div class="rec p-low">
+      <div class="rec-num">5</div>
+      <div class="rec-text"><strong>לעקוב אחרי קמפיין התנועה (₪1,613)</strong> — לא מייצר לידים ישירים. לוודא שיש עלייה בקהל חם (עוקבים/ביקורי אתר) שמצדיקה את ההשקעה.</div>
+    </div>
+    <div class="rec p-high">
+      <div class="rec-num">6</div>
+      <div class="rec-text"><strong>לטפל בשיעור הסגירה שירד</strong> — מ-16.5% באפריל ל-10–12% במאי. הסיבה ככל הנראה אינה שיווקית — הלידים מאיכות דומה. לבדוק: האם הצוות עמד בעומס עם 128 לידים? כמה ימים בממוצע עד שיחה ראשונה? לשפר את מהירות המענה — כל יום שנוסף מוריד את יחס הסגירה.</div>
+    </div>
+    <div class="rec p-med">
+      <div class="rec-num">7</div>
+      <div class="rec-text"><strong>להמשיך עם מסר הפגישה ווינר</strong> — 40% מהלידים מגיעים ממודעה אחת. לא לבלבל אותה ולא להחליף אותה. להגביר את התקציב עליה ולייצר ווריאציות עם אותה זווית (פגישה אישית בחינם + זהות מקצועית).</div>
+    </div>
+  </div>
+
+  <div class="footer">דוח הופק אוטומטית | נתוני Meta Ads + CRM | 04.06.2026</div>
+
+</div>
+</body>
+</html>
