@@ -1,0 +1,21 @@
+name: Daily Budget Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *'  # 06:00 UTC = 08:00 ישראל (קיץ)
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run budget report
+        env:
+          META_TOKEN: ${{ secrets.META_TOKEN }}
+          GREENAPI_TOKEN: ${{ secrets.GREENAPI_TOKEN }}
+          AD_ACCOUNT: act_1026356652124107
+          GREENAPI_INSTANCE: '7105326802'
+          TARGET: '120363422423851402@g.us'
+        run: node budget-report.js
