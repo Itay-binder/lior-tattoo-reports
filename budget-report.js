@@ -34,14 +34,16 @@ function greenSend(message) {
   });
 }
 
-function dateStr(d) { return d.toISOString().slice(0, 10); }
+function dateStr(d) {
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), dd = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
 
 function categorize(name) {
-  const n = name;
-  if (/שיעור.?מתנה|giftlesson|gift.lesson/i.test(n)) return 'gift';
-  if (/תנועה.?לפרופיל|תנועה לפרופיל|CBO.*תנועה|תנועה.*CBO/i.test(n)) return 'traffic';
-  if (/מעורבות|engagement/i.test(n)) return 'engagement';
-  if (/לידים|leads?/i.test(n)) return 'leads';
+  if (/שיעור.*מתנה|giftlesson/i.test(name)) return 'gift';
+  if (/תנועה.*פרופיל|CBO.*תנועה|תנועה.*CBO/i.test(name)) return 'traffic';
+  if (/מעורבות|engagement/i.test(name)) return 'engagement';
+  if (/לידים|leads?/i.test(name)) return 'leads';
   return 'other';
 }
 
